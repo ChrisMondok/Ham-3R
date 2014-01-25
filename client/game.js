@@ -30,6 +30,28 @@ var tickInterval = setInterval(function() {
 	});
 }, 1000/30);
 
+function submitWord(word) {
+	console.info("Typed "+word);
+}
+
+
 window.addEventListener('load', function() {
 	window.p = new Player();
+
+	var input = document.getElementsByTagName('input')[0];
+
+	input.addEventListener('keydown',function(keyEvent) {
+		switch(keyEvent.keyCode) {
+			case 13:
+			case 32:
+				var word = input.value;
+				input.value = '';
+				submitWord(word);
+				break;
+		}
+	});
+
+	input.addEventListener('keyup', function() {
+		input.value= input.value.trim();
+	});
 }, false);

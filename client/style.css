@@ -5,11 +5,31 @@ body, html {
 div#gameboard {
 	position: relative;
 	background-color: black;
-	border: 1px solid white;
 	width: 600px;
-	height: 600px;
+	height: 300px;;
+	-webkit-border-radius: 300px;
+	border-radius: 300px 300px 0px 0px;
+}
+
+div.smallcircle {
+	position: absolute;
+	top: 250px;
+	background-color: black;
+	left: 250px;
+	width: 100px;
+	height: 100px;
+	border-radius:50px;
 }
 
 div.player {
 	background-image: url(images/player.svg);
+}
+
+input {
+	position: absolute;
+	top: 360px;
+	left: 250px;
+	width: 100px;
+	box-sizing: border-box;
+	z-index: 100000;
 }

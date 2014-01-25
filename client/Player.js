@@ -30,6 +30,8 @@ Player.prototype.destroy = function() {
 Player.prototype.keyboardListener = function(keyEvent) {
 	var down = !(keyEvent.type == 'keyup');
 
+	var handled = true;
+
 	switch(keyEvent.key || keyEvent.keyIdentifier) {
 		case "Left":
 			this.left = down;
@@ -38,17 +40,21 @@ Player.prototype.keyboardListener = function(keyEvent) {
 			this.right = down;
 			break;
 		default:
+			handled = false;
 			console.info(keyEvent.key+" unbound");
 	}
 
-	keyEvent.preventDefault();
-	keyEvent.stopPropagation();
 
 	if(this.left == this.right) {
 		this.left = false;
 		this.right = false
 	}
-	return false;
+
+	if(handled) {
+		keyEvent.preventDefault();
+		keyEvent.stopPropagation();
+		return false;
+	}
 }
 
 Player.prototype.tick = function(dt) {
