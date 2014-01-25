@@ -1,8 +1,12 @@
 var ticked = [];
 var _lastTick = new Date();
 
-var WIDTH = 600;
-var HEIGHT = 600;
+var WIDTH = 800;
+var HEIGHT = 400;
+
+var WORDLENGTH = 4;
+
+var enemies = [];
 
 function addTicked(entity) {
 	if(ticked.indexOf(entity) == -1)
@@ -32,11 +36,17 @@ var tickInterval = setInterval(function() {
 
 function submitWord(word) {
 	console.info("Typed "+word);
+	enemies.forEach(function(e) {
+		if(e.word == word) {
+			console.log("TODO: ADD POINTS");
+			e.destroy();
+			console.log("TODO: INCREASE WORD LENGTH");
+		}
+	});
 }
 
-
 window.addEventListener('load', function() {
-	window.p = new Player();
+	console.log("Game loaded");
 
 	var input = document.getElementsByTagName('input')[0];
 
@@ -54,4 +64,45 @@ window.addEventListener('load', function() {
 	input.addEventListener('keyup', function() {
 		input.value= input.value.trim();
 	});
+
+	loadWords(startGame);
 }, false);
+
+var WORDS = [];
+
+function loadWords(callback) {
+	console.log("Loading words");
+	for(var i = 0; i < 30; i++)
+		WORDS[i] = [];
+
+	var req = new XMLHttpRequest();
+	req.open('GET', 'words.json');
+	req.addEventListener('load', function() {
+		console.log("Got words");
+		JSON.parse(this.response).forEach(function(w) {
+			WORDS[w.length].push(w);
+		});
+		console.log("Words processed.");
+
+		callback();
+	});
+
+	req.send();
+}
+
+function startGame() {
+	console.log("Starting game");
+	window.p = new Player();
+}
+
+function spawnEnemy(deg) {
+	var e = new Enemy();
+	e.angle = deg;
+
+	var wordLength = WORDLENGTH+Math.floor(Math.random()*5-2);
+	e.setWord(pickWord(wordLength));
+}
+
+function pickWord(length) {
+	return WORDS[length][Math.floor(Math.random()*WORDS[length].length)];
+}

@@ -12,7 +12,7 @@ var Sprite = extend(TickedEntity, function() {
 		get: function() { return _x; },
 		set: function(value) {
 			_x = value;
-			this.node.style.left = _x - this.width/2+'px';
+			this.node.style.left = Math.floor(_x - this.width/2)+'px';
 		},
 		enumerable: true
 	});
@@ -21,7 +21,7 @@ var Sprite = extend(TickedEntity, function() {
 		get: function() { return _y; },
 		set: function(value) {
 			_y = value;
-			this.node.style.top = _y - this.height/2+'px';
+			this.node.style.top = Math.floor(_y - this.height/2)+'px';
 		},
 		enumerable: true
 	});
@@ -30,7 +30,7 @@ var Sprite = extend(TickedEntity, function() {
 		get: function() { return _width; },
 		set: function(value) {
 			_width = value;
-			this.node.style.width = _width +'px';
+			this.node.style.width = Math.floor(_width) +'px';
 		},
 		enumerable: true
 	});
@@ -39,7 +39,7 @@ var Sprite = extend(TickedEntity, function() {
 		get: function() { return _height; },
 		set: function(value) {
 			_height = value;
-			this.node.style.height = _height +'px';
+			this.node.style.height = Math.floor(_height) +'px';
 		},
 		enumerable: true
 	});
@@ -48,7 +48,7 @@ var Sprite = extend(TickedEntity, function() {
 		get: function() { return _rotation; },
 		set: function(value) {
 			_rotation = value;
-			var str = 'rotate('+_rotation+'deg)';
+			var str = 'rotate('+Math.floor(_rotation)+'deg)';
 			this.node.style.webkitTransform = str;
 			this.node.style.transform = str;
 		},
@@ -67,6 +67,11 @@ Sprite.prototype.createNode = function() {
 	var node = document.createElement('div');
 	return node;
 };
+
+Sprite.prototype.destroy = function() {
+	TickedEntity.prototype.destroy.apply(this,arguments);
+	this.node.parentNode.removeChild(this.node);
+}
 
 Sprite.prototype.tick = function(dt) {
 	TickedEntity.prototype.tick.apply(this,arguments);

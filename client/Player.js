@@ -9,7 +9,7 @@ var Player = extend(Sprite, function() {
 	document.getElementById('gameboard').appendChild(this.node);
 
 	this.x = WIDTH/2;
-	this.y = 300;
+	this.y = HEIGHT;
 
 	this.left = false;
 	this.right = false;
