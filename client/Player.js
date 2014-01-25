@@ -13,6 +13,10 @@ var Player = extend(Sprite, function() {
 
 	this.left = false;
 	this.right = false;
+	this.fire = false;
+
+	this.blasterReloadTime = 2000;
+	this.blasterDelay = 0;
 });
 
 Player.prototype.createNode = function() {
@@ -39,6 +43,8 @@ Player.prototype.keyboardListener = function(keyEvent) {
 		case "Right":
 			this.right = down;
 			break;
+		case "Up":
+			this.fire = down;
 		default:
 			handled = false;
 			//console.info(keyEvent.key+" unbound");
@@ -64,4 +70,16 @@ Player.prototype.tick = function(dt) {
 	rdelta *= (dt/3);
 
 	this.rotation = Math.min(90, Math.max(this.rotation + rdelta, -90));
+
+	if(this.fire)
+		this.fireBlaster();
+
+	this.blasterDelay = Math.max(0,this.blasterDelay-dt);
 }
+
+Player.prototype.fireBlaster = function() {
+	if(this.blasterDelay && false)
+		return;
+	this.blasterDelay = this.blasterReloadTime;
+	fireBlaster();
+};

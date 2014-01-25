@@ -8,6 +8,9 @@ var Sprite = extend(TickedEntity, function() {
 		_width = 32, _height = 32,
 		_rotation = 0;
 
+	this._rotationString = "rotate(0deg)";
+	this._scaleString = "scale(1,1)";
+
 	Object.defineProperty(this, 'x', {
 		get: function() { return _x; },
 		set: function(value) {
@@ -48,9 +51,8 @@ var Sprite = extend(TickedEntity, function() {
 		get: function() { return _rotation; },
 		set: function(value) {
 			_rotation = value;
-			var str = 'rotate('+Math.floor(_rotation)+'deg)';
-			this.node.style.webkitTransform = str;
-			this.node.style.transform = str;
+			this._rotationString = 'rotate('+Math.floor(-_rotation)+'deg)';
+			this.updateTransform();
 		},
 		enumerable: true
 	});
@@ -62,6 +64,12 @@ var Sprite = extend(TickedEntity, function() {
 
 	document.getElementById('gameboard').appendChild(this.node);
 });
+
+Sprite.prototype.updateTransform = function() {
+	var str = this._rotationString+" "+this._scaleString;
+	this.node.style.webkitTransform = str;
+	this.node.style.transform = str;
+}
 
 Sprite.prototype.createNode = function() {
 	var node = document.createElement('div');

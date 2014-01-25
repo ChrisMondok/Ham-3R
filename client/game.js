@@ -6,6 +6,9 @@ var HEIGHT = 400;
 
 var enemies = [];
 
+var player = null;
+var spawner = null;
+
 function addTicked(entity) {
 	if(ticked.indexOf(entity) == -1)
 		ticked.push(entity);
@@ -36,8 +39,8 @@ window.addEventListener('load', function() {
 
 	var input = document.getElementsByTagName('input')[0];
 
-	var spawner = new Spawner();
-	var player = new Player();
+	spawner = new Spawner();
+	player = new Player();
 	window.spawner = spawner;
 
 	input.addEventListener('keydown',function(keyEvent) {
@@ -86,6 +89,16 @@ function loadWords(callback) {
 	req.send();
 }
 
+function gotJoystickAngle(angle) {
+	if(player)
+		player.rotation = -angle;
+}
+
+function gotJoystickFire() {
+	if(player)
+		player.fireBlaster();
+}
+
 function startGame() {
 	var tickInterval = setInterval(function() {
 		var now = new Date();
@@ -98,6 +111,17 @@ function startGame() {
 		});
 	}, 1000/30);
 
+}
+
+function fireBlaster() {
+	if(player && spawner) {
+		var b = new Blaster();
+		b.rotation = player.rotation + 90;
+		b.setAngle(10 - 9.5*((spawner.spread-10)/80));
+		spawner.increaseSpread();
+		b.x = player.x;
+		b.y = player.y;
+	}
 }
 
 function pickWord(length) {

@@ -50,12 +50,11 @@ Spawner.prototype.spawnEnemy = function() {
 
 	e.ttl = Math.random()*4000+4000;
 
-	var l = this.wordLength+Math.floor(Math.random()*5-2);
-	e.setWord(pickWord(l));
+	e.setWord(pickWord(this.wordLength));
 
 	e.setSize(48 - 46*this.mouseDifficulty/15);
 
-	e.angleDelta = Math.random() * this.mouseDifficulty*2 - this.mouseDifficulty*4;
+	e.angleDelta = (Math.random()-.5)*2 * this.mouseDifficulty*4;
 
 	this.timeSinceSpawn = 0;
 
@@ -75,7 +74,7 @@ Spawner.prototype.decreaseWordLength = function() {
 };
 
 Spawner.prototype.increaseSpread = function() {
-	this.spread += 80/5;
+	this.spread = Math.min(90, this.spread + 80/5);
 	this.spreadTicksUntilDecrease = this.spreadCooldown;
 	this.spreadMeter.value = Math.round(this.spread);
 };
