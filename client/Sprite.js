@@ -65,6 +65,7 @@ var Sprite = extend(TickedEntity, function() {
 
 Sprite.prototype.createNode = function() {
 	var node = document.createElement('div');
+	node.style.display = 'none';
 	return node;
 };
 
@@ -74,5 +75,6 @@ Sprite.prototype.destroy = function() {
 }
 
 Sprite.prototype.tick = function(dt) {
+	this.node.style.display = '';
 	TickedEntity.prototype.tick.apply(this,arguments);
 };

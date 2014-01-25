@@ -37,6 +37,27 @@ input {
 	box-sizing: border-box;
 	z-index: 100000;
 }
+meter#wordLengthMeter {
+	position: absolute;
+	top: 500px;
+	left: 300px;
+	width: 200px;
+	box-sizing: border-box;
+}
+
+meter#spreadMeter {
+	position: absolute;
+	top: 400px;
+	left:0px;
+	width: 350px;
+}
+
+meter#mouseDifficultyMeter {
+	position: absolute;
+	top: 400px;
+	right:0px;
+	width: 350px;
+}
 
 div.word {
 	position: absolute;

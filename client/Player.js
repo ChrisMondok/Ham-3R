@@ -41,7 +41,7 @@ Player.prototype.keyboardListener = function(keyEvent) {
 			break;
 		default:
 			handled = false;
-			console.info(keyEvent.key+" unbound");
+			//console.info(keyEvent.key+" unbound");
 	}
 
 

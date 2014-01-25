@@ -4,8 +4,6 @@ var _lastTick = new Date();
 var WIDTH = 800;
 var HEIGHT = 400;
 
-var WORDLENGTH = 4;
-
 var enemies = [];
 
 function addTicked(entity) {
@@ -23,23 +21,11 @@ function removeTicked(entity) {
 		throw "Tried to untick non-ticked entity";
 }
 
-var tickInterval = setInterval(function() {
-	var now = new Date();
-	var dt = now.getTime() - _lastTick.getTime();
-
-	_lastTick = now;
-
-	ticked.forEach(function(entity) {
-		entity.tick(dt);
-	});
-}, 1000/30);
-
 function submitWord(word) {
 	console.info("Typed "+word);
 	enemies.forEach(function(e) {
 		if(e.word == word) {
-			console.log("TODO: ADD POINTS");
-			e.destroy();
+			e.killed();
 			console.log("TODO: INCREASE WORD LENGTH");
 		}
 	});
@@ -50,6 +36,10 @@ window.addEventListener('load', function() {
 
 	var input = document.getElementsByTagName('input')[0];
 
+	var spawner = new Spawner();
+	var player = new Player();
+	window.spawner = spawner;
+
 	input.addEventListener('keydown',function(keyEvent) {
 		switch(keyEvent.keyCode) {
 			case 13:
@@ -57,12 +47,18 @@ window.addEventListener('load', function() {
 				var word = input.value;
 				input.value = '';
 				submitWord(word);
+				spawner.increaseWordLength();
 				break;
 		}
 	});
 
 	input.addEventListener('keyup', function() {
 		input.value= input.value.trim();
+	});
+
+	document.body.addEventListener('mouseup', function() {
+		spawner.increaseMouseDifficulty();
+		input.focus();
 	});
 
 	loadWords(startGame);
@@ -91,16 +87,17 @@ function loadWords(callback) {
 }
 
 function startGame() {
-	console.log("Starting game");
-	window.p = new Player();
-}
+	var tickInterval = setInterval(function() {
+		var now = new Date();
+		var dt = now.getTime() - _lastTick.getTime();
 
-function spawnEnemy(deg) {
-	var e = new Enemy();
-	e.angle = deg;
+		_lastTick = now;
 
-	var wordLength = WORDLENGTH+Math.floor(Math.random()*5-2);
-	e.setWord(pickWord(wordLength));
+		ticked.forEach(function(entity) {
+			entity.tick(dt);
+		});
+	}, 1000/30);
+
 }
 
 function pickWord(length) {
