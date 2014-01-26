@@ -13,6 +13,8 @@ var ws = null;
 
 var tickInterval = null;
 
+var sounds = {};
+
 (function() {
 	var score = 0;
 
@@ -44,11 +46,25 @@ function removeTicked(entity) {
 
 function submitWord(word) {
 	if(spawner) spawner.increaseWordLength();
+	var hit = false;
 	enemies.forEach(function(e) {
 		if(e.word == word) {
+			hit = true;
 			e.killed();
 		}
 	});
+	if(hit)
+		playSound('rocket', 0.5);
+}
+
+function playSound(name, volume) {
+	if(sounds[name]) {
+		var s = document.createElement('audio');
+		s.src = sounds[name].src;
+		if(volume)
+			s.volume = volume;
+		s.play();
+	}
 }
 
 window.addEventListener('load', function() {
@@ -57,6 +73,11 @@ window.addEventListener('load', function() {
 	var input = document.getElementsByTagName('input')[0];
 
 	var gameboard = document.getElementById('gameboard');
+
+	var audioTags = document.getElementsByTagName('audio');
+	for(var i = 0; i < audioTags.length; i++)
+		sounds[audioTags[i].id.replace('Sound','')] = audioTags[i];
+
 
 	document.body.addEventListener('keydown',function(keyEvent) {
 		input.focus();
@@ -81,6 +102,7 @@ window.addEventListener('load', function() {
 		if(!player)
 			return;
 		spawner.increaseMouseDifficulty();
+		playSound('laser', 0.4);
 		click.preventDefault();
 //		var l = new Laser();
 //		l.x = player.x;
@@ -152,6 +174,7 @@ function startGame() {
 function fireBlaster() {
 	if(player && spawner) {
 		var b = new Blaster();
+		playSound('blaster');
 		b.rotation = player.rotation + 90;
 		b.setAngle(10 - 10*((spawner.spread-10)/80));
 		spawner.increaseSpread();
@@ -169,12 +192,15 @@ function addScore(points) {
 }
 
 function hitPlayer() {
-	if(player)
+	if(player) {
+		playSound('hit');
 		player.health -= 100/3;
+	}
 }
 
 function endGame() {
 	if(player && !player.destroyed) {
+		playSound('gameOver');
 		player.destroy();
 		player = null;
 	}
