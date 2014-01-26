@@ -11,6 +11,8 @@ var spawner = null;
 
 var ws = null;
 
+var tickInterval = null;
+
 (function() {
 	var score = 0;
 
@@ -72,20 +74,23 @@ window.addEventListener('load', function() {
 		input.value= input.value.trim();
 	});
 
+	document.getElementById('restartButton').addEventListener('click', startGame);
+
 	document.body.addEventListener('mousedown', function(click) {
 		input.value = '';
 		if(!player)
 			return;
 		spawner.increaseMouseDifficulty();
-		var l = new Laser();
-		l.x = player.x;
-		l.y = player.y;
-		l.rotation = 90;
-
-		var clickX = click.x - gameboard.offsetLeft;
-		var clickY = click.y - gameboard.offsetTop;
-
-		l.rotation = (180/Math.PI)*Math.atan2(WIDTH/2 - clickY, clickX-WIDTH/2);
+		click.preventDefault();
+//		var l = new Laser();
+//		l.x = player.x;
+//		l.y = player.y;
+//		l.rotation = 90;
+//
+//		var clickX = click.x - gameboard.offsetLeft;
+//		var clickY = click.y - gameboard.offsetTop;
+//
+//		l.rotation = (180/Math.PI)*Math.atan2(WIDTH/2 - clickY, clickX-WIDTH/2);
 
 	});
 
@@ -128,8 +133,10 @@ function startGame() {
 	spawner = new Spawner();
 	player = new Player();
 
+	document.getElementById('scoreboard').style.display = 'none';
+
 	score = 0;
-	var tickInterval = setInterval(function() {
+	tickInterval = setInterval(function() {
 		var now = new Date();
 		var dt = now.getTime() - _lastTick.getTime();
 
@@ -179,6 +186,8 @@ function endGame() {
 
 	while(enemies.length)
 		enemies[0].destroy();
+
+	clearInterval(tickInterval);
 	setTimeout(showScoreboard, 1000);
 }
 
@@ -186,12 +195,19 @@ function showScoreboard() {
 	var scoreboard = document.getElementById('scoreboard');
 	scoreboard.style.display = 'table';
 	var req = new XMLHttpRequest();
-	var name = prompt("Enter your name");
+	var name = undefined;
+	if(score)
+		name = prompt("Enter your name");
 	req.open('GET','/scores.json');
 	req.addEventListener('load', function() {
 		var scores = JSON.parse(this.response);
-		var myScore = {name:name, score: score};
-		scores.push(myScore);
+		var tbody = scoreboard.getElementsByTagName('tbody')[0];
+		Array.prototype.slice.apply(tbody.getElementsByTagName('tr')).forEach(function(row) { row.parentNode.removeChild(row); });
+
+		if(score && name) {
+			var myScore = {name:name, score: score};
+			scores.push(myScore);
+		}
 		scores.sort(function(a,b) {return b.score - a.score})
 			.forEach(function(x) {
 				var row = document.createElement('tr');
@@ -204,13 +220,11 @@ function showScoreboard() {
 				score.innerText = x.score;
 				row.appendChild(score);
 
-				scoreboard.getElementsByTagName('tbody')[0].appendChild(row);
+				tbody.appendChild(row);
 			});
 
-		if(scores.indexOf(myScore) < 10) {
-			console.log("Submit my score!");
+		if(name && score && scores.indexOf(myScore) < 10)
 			ws.send(JSON.stringify(myScore));
-		}
 	});
 	req.send();
 }

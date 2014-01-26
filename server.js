@@ -63,7 +63,8 @@ js.on('axis', function(movement) {
 });
 
 function addHighScore(name, score) {
-	highScores.push({name: name, score: score});
+	if(score)
+		highScores.push({name: name, score: score});
 
 	highScores.sort(function(a,b){return b.score-a.score;});
 	while(highScores.length > 10)

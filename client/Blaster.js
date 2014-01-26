@@ -32,7 +32,10 @@ Blaster.prototype.destroy = function() {
 	var self = this;
 	var hit = [];
 	enemies.forEach(function(e) {
-		if(Math.abs(e.angle - self.rotation) < self.angle)
+		var angleDelta = Math.abs(e.angle - self.rotation);
+		var distance = Math.sqrt(Math.pow(self.x-e.x,2)+Math.pow(self.y-e.y,2));
+
+		if(angleDelta< self.angle || distance < 40)
 			hit.push(e);
 	});
 
