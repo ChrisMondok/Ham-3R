@@ -1,6 +1,6 @@
 var Spawner = extend(TickedEntity, function() {
 	this.timeSinceSpawn = 0;
-	this.targetSpawnRate = 1500;
+	this.targetSpawnRate = 1800;
 	this.nextSpawn = 2000;
 
 	this.wordLength = 4;
@@ -57,6 +57,8 @@ Spawner.prototype.spawnEnemy = function() {
 	e.angleDelta = (Math.random()-.5)*2 * this.mouseDifficulty*4;
 
 	this.timeSinceSpawn = 0;
+
+	this.targetSpawnRate = 1800/((score+50000)/50000);
 
 	return e;
 };
