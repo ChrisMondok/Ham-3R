@@ -48,6 +48,7 @@ httpServer.listen(8080);
 var n = process.argv[2] || 2;
 var js = new joystick(n, 100, 100);
 js.on('button', function(button) {
+	console.log("BUTTON");
 	if(button.value)
 		clients.forEach(function(c){
 			c.send(JSON.stringify({fire:true}))
