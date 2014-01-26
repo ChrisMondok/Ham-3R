@@ -1,0 +1,116 @@
+body, html {
+	background-color: #333;
+	color: white;
+	height:100%;
+	width:100%;
+	margin:0;
+	padding:0;
+	overflow: hidden;
+}
+div#gameboard {
+	position: absolute;
+	background-color: black;
+	left: 8px;
+	top: 32px;
+	width: 800px;
+	height: 400px;
+	-webkit-border-radius: 400px;
+	border-radius: 400px 400px 0px 0px;
+}
+
+canvas {
+	position: absolute;
+	top: 350px;
+	background-color: black;
+	left: 350px;
+	width: 100px;
+	height: 100px;
+	border-radius:50px;
+}
+
+div.player {
+	background-image: url(images/player.svg);
+}
+
+div.enemy {
+	background-color: #DD0000;
+}
+
+input {
+	position: absolute;
+	background-color: white;
+	color: black;
+	top: 475px;
+	left: 300px;
+	width: 200px;
+	box-sizing: border-box;
+	z-index: 100000;
+}
+meter#wordLengthMeter {
+	position: absolute;
+	top: 500px;
+	left: 300px;
+	width: 200px;
+	box-sizing: border-box;
+}
+
+meter#spreadMeter {
+	position: absolute;
+	top: 400px;
+	left:0px;
+	width: 350px;
+}
+
+meter#mouseDifficultyMeter {
+	position: absolute;
+	top: 400px;
+	right:0px;
+	width: 350px;
+}
+
+div.word {
+	position: absolute;
+	display: inline-block;
+	text-align:center;
+	font-family: monospace;
+	background-color: #555;
+	border: 1px solid rgba(255,255,255,0.6);
+}
+
+div#score {
+	background-color: black;
+	border: 1px solid white;
+	text-align;center;
+	position: absolute;
+	font-family: monospace;
+	left: 300px;
+	width: 200px;
+	top: -24px;
+	text-align: center;
+}
+
+table#scoreboard {
+	display: none;
+	position: absolute;
+	font-family: sans-serif;
+	left: 8px;
+	width: 800px;
+	top: 50px;
+	font-size: 1.1em;
+}
+
+table, caption {
+	background-color: rgba(0,0,0,0.75);
+}
+
+tr button {
+	width: 100%;
+}
+
+thead {
+	font-weight: bold;
+}
+
+a, a:visited {
+	color: white;
+}
