@@ -1,9 +1,9 @@
 Ham-3R
 ======
 
-Game by Chris Mondok
+Game design, programming, "art": Chris Mondok
 
-Audio by Matt Strawder
+Audio engineer: Matt Strawder
 
 Hosting
 -------
