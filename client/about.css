@@ -1,0 +1,22 @@
+html, body {
+	background-color: white;
+	font-family: sans-serif;
+}
+
+section {
+	background-color: #eee;
+	margin: 1em;
+	padding: 1em;
+}
+
+blockquote {
+	border-left: 2px solid black;
+	padding-left: 4px;
+	background-color: white;
+}
+
+header {
+	font-size: 1.5em;
+	font-weight: bold;
+	text-indent: 1em;
+}

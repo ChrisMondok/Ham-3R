@@ -8,7 +8,7 @@ body, html {
 	overflow: hidden;
 }
 div#gameboard {
-	position: relative;
+	position: absolute;
 	background-color: black;
 	left: 8px;
 	top: 32px;
@@ -95,7 +95,7 @@ table#scoreboard {
 	font-family: sans-serif;
 	left: 8px;
 	width: 800px;
-	top: 100px;
+	top: 50px;
 	font-size: 2em;
 }
 
@@ -109,4 +109,8 @@ tr button {
 
 thead {
 	font-weight: bold;
+}
+
+a, a:visited {
+	color: white;
 }
