@@ -45,7 +45,8 @@ wsServer.on('connection', function(connection) {
 
 httpServer.listen(8080);
 
-var js = new joystick(2, 100, 100);
+var n = process.argv[2] || 2;
+var js = new joystick(n, 100, 100);
 js.on('button', function(button) {
 	if(button.value)
 		clients.forEach(function(c){
