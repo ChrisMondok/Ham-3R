@@ -15,8 +15,12 @@ var Player = extend(Sprite, function() {
 	this.right = false;
 	this.fire = false;
 
-	this.blasterReloadTime = 2000;
+	this.blasterReloadTime = 500;
 	this.blasterDelay = 0;
+
+	this.health = 100;
+
+	this.ctx = document.getElementById('healthcanvas').getContext('2d');
 });
 
 Player.prototype.createNode = function() {
@@ -27,7 +31,8 @@ Player.prototype.createNode = function() {
 }
 
 Player.prototype.destroy = function() {
-	document.body.removeEventListener(kl);
+	document.body.removeEventListener('keydown',this.kl);
+	document.body.removeEventListener('keyup',this.kl);
 	Sprite.prototype.destroy.apply(this, arguments);
 }
 
@@ -47,7 +52,6 @@ Player.prototype.keyboardListener = function(keyEvent) {
 			this.fire = down;
 		default:
 			handled = false;
-			//console.info(keyEvent.key+" unbound");
 	}
 
 
@@ -64,8 +68,12 @@ Player.prototype.keyboardListener = function(keyEvent) {
 }
 
 Player.prototype.tick = function(dt) {
+
+	if(this.health <= 0)
+		endGame();
+
 	Sprite.prototype.tick.apply(this, arguments);
-	var rdelta = this.left ? -1 : (this.right ? 1 : 0);
+	var rdelta = this.left ? 1 : (this.right ? -1 : 0);
 
 	rdelta *= (dt/3);
 
@@ -75,10 +83,31 @@ Player.prototype.tick = function(dt) {
 		this.fireBlaster();
 
 	this.blasterDelay = Math.max(0,this.blasterDelay-dt);
+
+	this.ctx.clearRect(0,0,100,100);
+	this.ctx.strokeStyle = "#999999";
+	this.ctx.lineWidth = 12;
+	this.ctx.beginPath();
+	this.ctx.arc(50,50,40,0,Math.PI,false);
+	this.ctx.stroke();
+
+	this.ctx.strokeStyle = "#FF0000";
+	this.ctx.lineWidth = 8;
+	this.ctx.beginPath();
+	this.ctx.arc(50,50,40,0,Math.PI,false);
+	this.ctx.stroke();
+
+	if(this.health >= 1) {
+		this.ctx.strokeStyle = "#00FF00";
+		this.ctx.lineWidth = 8;
+		this.ctx.beginPath();
+		this.ctx.arc(50,50,40, Math.PI, Math.PI*(1-this.health/100), true);
+		this.ctx.stroke();
+	}
 }
 
 Player.prototype.fireBlaster = function() {
-	if(this.blasterDelay && false)
+	if(this.blasterDelay)
 		return;
 	this.blasterDelay = this.blasterReloadTime;
 	fireBlaster();

@@ -9,6 +9,8 @@ function extend(t, fn) {
 	}
 
 	F.prototype.$super = t.prototype;
+
+	this.destroyed = false;
 	
 	return F;
 }
@@ -18,7 +20,12 @@ function TickedEntity() {
 }
 
 TickedEntity.prototype.destroy = function() {
+	if(this.destroyed) {
+		debugger;
+		throw "Tried to destroy destroyed entity";
+	}
 	removeTicked(this);
+	this.destroyed = true;
 }
 
 TickedEntity.prototype.tick = function(dt) { }

@@ -9,6 +9,22 @@ var enemies = [];
 var player = null;
 var spawner = null;
 
+var ws = null;
+
+(function() {
+	var score = 0;
+
+	Object.defineProperty(window, 'score', {
+		get: function() {
+			return score;
+		},
+		set: function(value) {
+			score = value;
+			document.getElementById('score').innerHTML = score;
+		}
+	});
+})();
+
 function addTicked(entity) {
 	if(ticked.indexOf(entity) == -1)
 		ticked.push(entity);
@@ -25,32 +41,29 @@ function removeTicked(entity) {
 }
 
 function submitWord(word) {
-	console.info("Typed "+word);
+	if(spawner) spawner.increaseWordLength();
 	enemies.forEach(function(e) {
 		if(e.word == word) {
 			e.killed();
-			console.log("TODO: INCREASE WORD LENGTH");
 		}
 	});
 }
 
 window.addEventListener('load', function() {
-	console.log("Game loaded");
+	console.log("Scripts loaded");
 
 	var input = document.getElementsByTagName('input')[0];
 
-	spawner = new Spawner();
-	player = new Player();
-	window.spawner = spawner;
+	var gameboard = document.getElementById('gameboard');
 
-	input.addEventListener('keydown',function(keyEvent) {
+	document.body.addEventListener('keydown',function(keyEvent) {
+		input.focus();
 		switch(keyEvent.keyCode) {
 			case 13:
 			case 32:
 				var word = input.value;
 				input.value = '';
 				submitWord(word);
-				spawner.increaseWordLength();
 				break;
 		}
 	});
@@ -59,9 +72,21 @@ window.addEventListener('load', function() {
 		input.value= input.value.trim();
 	});
 
-	document.body.addEventListener('mouseup', function() {
+	document.body.addEventListener('mousedown', function(click) {
+		input.value = '';
+		if(!player)
+			return;
 		spawner.increaseMouseDifficulty();
-		input.focus();
+		var l = new Laser();
+		l.x = player.x;
+		l.y = player.y;
+		l.rotation = 90;
+
+		var clickX = click.x - gameboard.offsetLeft;
+		var clickY = click.y - gameboard.offsetTop;
+
+		l.rotation = (180/Math.PI)*Math.atan2(WIDTH/2 - clickY, clickX-WIDTH/2);
+
 	});
 
 	loadWords(startGame);
@@ -100,6 +125,10 @@ function gotJoystickFire() {
 }
 
 function startGame() {
+	spawner = new Spawner();
+	player = new Player();
+
+	score = 0;
 	var tickInterval = setInterval(function() {
 		var now = new Date();
 		var dt = now.getTime() - _lastTick.getTime();
@@ -117,7 +146,7 @@ function fireBlaster() {
 	if(player && spawner) {
 		var b = new Blaster();
 		b.rotation = player.rotation + 90;
-		b.setAngle(10 - 9.5*((spawner.spread-10)/80));
+		b.setAngle(10 - 10*((spawner.spread-10)/80));
 		spawner.increaseSpread();
 		b.x = player.x;
 		b.y = player.y;
@@ -126,4 +155,62 @@ function fireBlaster() {
 
 function pickWord(length) {
 	return WORDS[length][Math.floor(Math.random()*WORDS[length].length)];
+}
+
+function addScore(points) {
+	score += points;
+}
+
+function hitPlayer() {
+	if(player)
+		player.health -= 100/3;
+}
+
+function endGame() {
+	if(player && !player.destroyed) {
+		player.destroy();
+		player = null;
+	}
+
+	if(spawner && !spawner.destroyed) {
+		spawner.destroy();
+		spawner = null;
+	}
+
+	while(enemies.length)
+		enemies[0].destroy();
+	setTimeout(showScoreboard, 1000);
+}
+
+function showScoreboard() {
+	var scoreboard = document.getElementById('scoreboard');
+	scoreboard.style.display = 'table';
+	var req = new XMLHttpRequest();
+	var name = prompt("Enter your name");
+	req.open('GET','/scores.json');
+	req.addEventListener('load', function() {
+		var scores = JSON.parse(this.response);
+		var myScore = {name:name, score: score};
+		scores.push(myScore);
+		scores.sort(function(a,b) {return b.score - a.score})
+			.forEach(function(x) {
+				var row = document.createElement('tr');
+
+				var name = document.createElement('td');
+				name.innerText = x.name;
+				row.appendChild(name);
+
+				var score = document.createElement('td');
+				score.innerText = x.score;
+				row.appendChild(score);
+
+				scoreboard.getElementsByTagName('tbody')[0].appendChild(row);
+			});
+
+		if(scores.indexOf(myScore) < 10) {
+			console.log("Submit my score!");
+			ws.send(JSON.stringify(myScore));
+		}
+	});
+	req.send();
 }

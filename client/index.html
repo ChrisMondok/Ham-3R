@@ -10,15 +10,28 @@
 		<script src="Enemy.js"></script>
 		<script src="Spawner.js"></script>
 		<script src="Blaster.js"></script>
+		<script src="Laser.js"></script>
 		<script src="joystickInput.js"></script>
 	</head>
 	<body>
 		<div id="gameboard">
-			<div class="smallcircle"></div>
+			<canvas id="healthcanvas" width="100" height="100"></canvas>
 			<input></input>
 			<meter id="wordLengthMeter" min="4" max="20" high="12" value="4"></meter>
 			<meter id="spreadMeter" min="10" max="90" value="10"></meter>
 			<meter id="mouseDifficultyMeter" min="0" max="15" high="8" value="0"></meter>
+			<div id="score"></div>
 		</div>
+		<table id="scoreboard">
+			<caption>High Scores</caption>
+			<thead>
+				<tr>
+					<td>Name</td>
+					<td>Score</td>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
 	</body>
 </html>

@@ -8,4 +8,6 @@ window.addEventListener('load', function() {
 		if(data.fire)
 			gotJoystickFire();
 	});
+
+	window.ws = ws;
 });

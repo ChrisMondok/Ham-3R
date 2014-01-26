@@ -30,8 +30,13 @@ Enemy.prototype.createNode = function() {
 	return node;
 }
 
+Enemy.prototype.marked = function() {
+	setTimeout(this.killed.bind(this), 250);
+	this.node.classList.add('marked');
+}
+
 Enemy.prototype.killed = function() {
-	console.log("TODO: ADD POINTS");
+	addScore(100);
 	this.destroy();
 }
 
@@ -67,7 +72,7 @@ Enemy.prototype.tick = function(dt) {
 
 	if(this.life > this.ttl) {
 		this.destroy();
-		console.warn("Hit player");
+		hitPlayer();
 		return;
 	}
 
