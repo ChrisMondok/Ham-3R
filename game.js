@@ -67,6 +67,20 @@ function playSound(name, volume) {
 	}
 }
 
+function initJsjs() {
+	var jsjsClient = window.jsjsc = new jsjs.Client();
+	jsjsClient.connect('ws://'+jsjs.serverBestGuess);
+
+	jsjsClient.addEventListener('buttonpressed', function(e) {
+		var number = e.detail.joystick;
+		if(e.detail.button == 'a') {
+			if(player)
+				player.fireBlaster();
+			jsjsClient.rumble(number, 100);
+		}
+	});
+}
+
 window.addEventListener('load', function() {
 	console.log("Scripts loaded");
 
@@ -77,6 +91,8 @@ window.addEventListener('load', function() {
 	var audioTags = document.getElementsByTagName('audio');
 	for(var i = 0; i < audioTags.length; i++)
 		sounds[audioTags[i].id.replace('Sound','')] = audioTags[i];
+	
+	initJsjs();
 
 
 	document.body.addEventListener('keydown',function(keyEvent) {
@@ -139,16 +155,6 @@ function loadWords(callback) {
 	});
 
 	req.send();
-}
-
-function gotJoystickAngle(angle) {
-	if(player)
-		player.rotation = -angle;
-}
-
-function gotJoystickFire() {
-	if(player)
-		player.fireBlaster();
 }
 
 function startGame() {
